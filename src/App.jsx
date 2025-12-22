@@ -1,12 +1,30 @@
-import { useState } from "react";
 import "./App.css";
+import { useContext, useEffect } from "react";
+import { QuizContext } from "./context/quiz";
+
+// Components
+import Welcome from "./components/Welcome";
+import Question from "./components/Question";
+import GameOver from "./components/GameOver";
+import PickCategory from "./components/PickCategory";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [quizState, dispatch] = useContext(QuizContext);
+
+  useEffect(() => {
+    // embaralhar as perguntas
+    dispatch({ type: "REORDER_QUESTIONS" });
+  }, []);
 
   return (
     <>
-      <h1>Quiz App</h1>
+      <div className="App">
+        <h1>Quiz de Programação</h1>
+        {quizState.gameStage === "Start" && <Welcome />}
+        {quizState.gameStage === "Category" && <PickCategory />}
+        {quizState.gameStage === "Playing" && <Question />}
+        {quizState.gameStage === "End" && <GameOver />}
+      </div>
     </>
   );
 }
